@@ -43,6 +43,8 @@ int main(){
 	printf("Number of sequences with 4 in row:\n %i \n", sequences);
 
 	//Scale down to 100 flips
+	float scaled = (float) sequences/(precision/100);
+	printf("Scaled to 100 flips:\n %f \n", scaled);
 
 
 }
