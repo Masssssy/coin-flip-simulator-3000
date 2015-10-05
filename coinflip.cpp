@@ -2,14 +2,38 @@
 #include <stdlib.h>     /* srand, rand */
 #include <time.h>       /* time */
 
+
+long precision = 10000000;
+int flipsPerTime = 100;
+
+int *flips = new int[100];
+int *results = new int[precision];
+
+int doFlipSequence();
+
 int main(){
 
-	int precision = 1000000000;
-	int *flips = new int[precision];
 	srand (time(NULL));
 
-	//Generate 100 random flips
-	for(long i=0; i<precision; i++){
+
+	//Do precision no. of flip sequences of length "flipsPerTime"
+	for(int b=0; b < precision; b++){
+		results[b] = doFlipSequence();
+	}
+
+	//Calc the average
+	double average = 0;
+	for(int b = 0; b < precision; b++){
+		average += results[b];
+	}
+	average = (double) average/precision;
+
+	printf("Expected amounts appearing: %f\n", average);
+}
+
+int doFlipSequence(){
+	//Generate "flipsPerTime" no. of random flips
+	for(long i=0; i < flipsPerTime; i++){
 		int coinFlip = rand() % 2;  
 	
 		if(coinFlip == 1){
@@ -19,32 +43,12 @@ int main(){
 		}
 	}
 
-/*
-	for(int i=0; i<100; i++){
-		printf("%i",flips[i]);
-	}*/
-
-
-	//Count sequences
-	int streakOfOnes = 0;
-	int reqInRow = 4;
 	int sequences = 0;
-	for(long i=0; i< precision; i++){
-		if(flips[i] == 1){
-			streakOfOnes +=1;
-		}else{
-			if(streakOfOnes >= reqInRow){
-				sequences += 1 + (streakOfOnes - reqInRow);
-			}
-			streakOfOnes = 0;
+	for(long i = 0; i < flipsPerTime-3; i++){
+		//Enter sequence to test here
+		if(flips[i] == 1 && flips[i+1] == 0 && flips[i+2] == 1 && flips[i+3] == 0){
+			sequences++;
 		}
 	}
-
-	printf("Number of sequences with 4 in row:\n %i \n", sequences);
-
-	//Scale down to 100 flips
-	float scaled = (float) sequences/(precision/100);
-	printf("Scaled to 100 flips:\n %f \n", scaled);
-
-
+	return sequences;
 }
